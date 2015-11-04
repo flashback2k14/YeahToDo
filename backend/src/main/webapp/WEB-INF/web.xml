@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
+    <servlet>
+        <servlet-name>TodoReportServlet</servlet-name>
+        <servlet-class>com.yeahdev.todoapp.backend.TodoReportServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TodoReportServlet</servlet-name>
+        <url-pattern>/todoreport</url-pattern>
+    </servlet-mapping>
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+</web-app>

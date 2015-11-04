@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+    <cron>
+        <url>/todoreport</url>
+        <description>Send me an email of outstanding todos in the morning.</description>
+        <schedule>every day 09:00</schedule>
+        <timezone>Europe/Berlin</timezone>
+    </cron>
+</cronentries>
