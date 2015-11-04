@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter<String> lvAdapter;
     private FloatingActionButton fabAddToDo;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
