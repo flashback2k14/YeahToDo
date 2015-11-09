@@ -37,7 +37,9 @@ public class TodoReportServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
-        log.warning("Got cron message, constructing email!");
+        log.warning("BEGIN TODO REPORT");
+        log.warning("Cron Job started!");
+        log.warning("Fetching Data from Firebase!");
 
         final Firebase firebase = new Firebase("https://todoapp-appengine.firebaseio.com/todoitems");
         firebase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -60,27 +62,11 @@ public class TodoReportServlet extends HttpServlet {
                             .append("\n");
                     }
                 }
-
                 log.warning("Send Email!");
-
-                Properties properties = new Properties();
-                Session session = Session.getDefaultInstance(properties, null);
-
-                try {
-                    String date = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN).format(Calendar.getInstance(TimeZone.getTimeZone("Europe/Berlin")).getTime());
-                    Message msg = new MimeMessage(session);
-
-                    msg.setFrom(new InternetAddress("reminder@midyear-task-111217.appspotmail.com", "ToDo Reminder"));
-                    msg.addRecipient(Message.RecipientType.TO, new InternetAddress("yeahdev@gmail.com", "Recipient"));
-                    msg.setSubject("Reminder - ToDo Items - " + date);
-                    msg.setText(newItemMessage.toString());
-
-                    Transport.send(msg);
-
+                if (sendReportEmail(newItemMessage.toString())) {
                     log.warning("Send Email successful!");
-
-                } catch (MessagingException | UnsupportedEncodingException e) {
-                    log.warning("Send Email failed! " + e.getMessage());
+                } else {
+                    log.warning("Send Email failed!");
                 }
             }
 
@@ -89,10 +75,34 @@ public class TodoReportServlet extends HttpServlet {
                 log.warning("ERROR: Firebase onCancelled: " + firebaseError.getMessage());
             }
         });
+
+        log.warning("Cron Job completed!");
+        log.warning("END TODO REPORT");
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doGet(req,resp);
+        doGet(req, resp);
+    }
+
+    private boolean sendReportEmail(String message) {
+        Properties properties = new Properties();
+        Session session = Session.getDefaultInstance(properties, null);
+
+        try {
+            String date = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN).format(Calendar.getInstance(TimeZone.getTimeZone("Europe/Berlin")).getTime());
+            Message msg = new MimeMessage(session);
+
+            msg.setFrom(new InternetAddress("reminder@midyear-task-111217.appspotmail.com", "ToDo Reminder"));
+            msg.addRecipient(Message.RecipientType.TO, new InternetAddress("yeahdev@gmail.com", "Recipient"));
+            msg.setSubject("Reminder - ToDo Items - " + date);
+            msg.setText(message);
+
+            Transport.send(msg);
+            return true;
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            log.warning("ERROR: sendReportEmail: " + e.getMessage());
+            return false;
+        }
     }
 }

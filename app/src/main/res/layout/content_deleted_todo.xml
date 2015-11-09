@@ -11,11 +11,11 @@
     android:background="@color/colorPrimaryDark"
     android:fitsSystemWindows="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".activities.MainActivity"
-    tools:showIn="@layout/activity_main">
+    tools:context="com.yeahdev.todoapp.activities.DeletedTodoActivity"
+    tools:showIn="@layout/activity_deleted_todo">
 
     <ListView
-        android:id="@+id/lvToDos"
+        android:id="@+id/lvDeletedToDos"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="10dp"
