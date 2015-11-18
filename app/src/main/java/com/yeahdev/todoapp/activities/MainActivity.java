@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(final View view) {
                 String item  = etToDo.getText().toString();
                 if (!TextUtils.isEmpty(item)) {
-                    FirebaseWrapper.addItem(Constants.BASEURL, Constants.ROUTE, item, new FirebaseWrapper.FirebaseWrapperChangedListener() {
+                    FirebaseWrapper.addItem(Constants.BASEURL, Constants.ROUTE, item, new FirebaseWrapper.OnChangedListener() {
                         @Override
                         public void onSuccess(String item) {
                             Util.buildSnackbar(lvToDos, item);
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupFirebase() {
-        FirebaseWrapper.loadData(Constants.BASEURL, Constants.ROUTE, new FirebaseWrapper.FirebaseWrapperLoadListener() {
+        FirebaseWrapper.loadData(Constants.BASEURL, Constants.ROUTE, new FirebaseWrapper.OnLoadListener() {
             @Override
             public void onAdded(String item) {
                 lvAdapter.add(item);

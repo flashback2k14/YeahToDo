@@ -1,11 +1,8 @@
 package com.yeahdev.todoapp.activities;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -72,7 +69,7 @@ public class DeletedTodoActivity extends AppCompatActivity {
     }
 
     private void setupFirebase() {
-        FirebaseWrapper.loadData(Constants.BASEURL, Constants.DELETEDROUTE, new FirebaseWrapper.FirebaseWrapperLoadListener() {
+        FirebaseWrapper.loadData(Constants.BASEURL, Constants.DELETEDROUTE, new FirebaseWrapper.OnLoadListener() {
             @Override
             public void onAdded(String item) {
                 lvDeletedAdapter.add(item);

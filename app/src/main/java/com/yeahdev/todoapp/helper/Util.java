@@ -39,7 +39,7 @@ public class Util {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        FirebaseWrapper.addItem(baseUrl, deleteRoute, item, new FirebaseWrapper.FirebaseWrapperChangedListener() {
+                        FirebaseWrapper.addItem(baseUrl, deleteRoute, item, new FirebaseWrapper.OnChangedListener() {
                             @Override
                             public void onSuccess(String item) {
                                 Util.buildSnackbar(view, item);
@@ -50,7 +50,7 @@ public class Util {
                             }
                         });
 
-                        FirebaseWrapper.removeItem(baseUrl, route, item, new FirebaseWrapper.FirebaseWrapperChangedListener() {
+                        FirebaseWrapper.removeItem(baseUrl, route, item, new FirebaseWrapper.OnChangedListener() {
                             @Override
                             public void onSuccess(String item) {
                                 Util.buildSnackbar(view, item);
@@ -89,7 +89,7 @@ public class Util {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        FirebaseWrapper.removeItem(baseUrl, deleteRoute, item, new FirebaseWrapper.FirebaseWrapperChangedListener() {
+                        FirebaseWrapper.removeItem(baseUrl, deleteRoute, item, new FirebaseWrapper.OnChangedListener() {
                             @Override
                             public void onSuccess(String item) {
                                 Util.buildSnackbar(view, item);

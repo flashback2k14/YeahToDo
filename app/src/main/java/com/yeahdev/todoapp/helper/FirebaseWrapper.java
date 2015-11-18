@@ -8,18 +8,18 @@ import com.firebase.client.ValueEventListener;
 
 public class FirebaseWrapper {
 
-    public interface FirebaseWrapperLoadListener {
-        public void onAdded(String item);
-        public void onRemoved(String item);
-        public void onCanceled(FirebaseError error);
+    public interface OnLoadListener {
+        void onAdded(String item);
+        void onRemoved(String item);
+        void onCanceled(FirebaseError error);
     }
 
-    public interface FirebaseWrapperChangedListener {
-        public void onSuccess(String item);
-        public void onFailed(FirebaseError error);
+    public interface OnChangedListener {
+        void onSuccess(String item);
+        void onFailed(FirebaseError error);
     }
 
-    public interface FirebaseWrapperListener {
+    public interface OnFullListener {
         public void onAdded(String item);
         public void onRemoved(String item);
         public void onSuccess(String item);
@@ -33,7 +33,7 @@ public class FirebaseWrapper {
      * @param route
      * @param listener
      */
-    public static void loadData(String baseUrl, String route, final FirebaseWrapperLoadListener listener) {
+    public static void loadData(String baseUrl, String route, final OnLoadListener listener) {
         new Firebase(baseUrl + route)
             .addChildEventListener(new ChildEventListener() {
                 @Override
@@ -74,7 +74,7 @@ public class FirebaseWrapper {
      * @param item
      * @param listener
      */
-    public static void addItem(String baseUrl, final String route, final String item, final FirebaseWrapperChangedListener listener) {
+    public static void addItem(String baseUrl, final String route, final String item, final OnChangedListener listener) {
         new Firebase(baseUrl + route)
             .push()
             .child("text")
@@ -101,7 +101,7 @@ public class FirebaseWrapper {
      * @param item
      * @param listener
      */
-    public static void removeItem(String baseUrl, final String route, final String item, final FirebaseWrapperChangedListener listener) {
+    public static void removeItem(String baseUrl, final String route, final String item, final OnChangedListener listener) {
         new Firebase(baseUrl + route)
             .orderByChild("text")
             .equalTo(item)
