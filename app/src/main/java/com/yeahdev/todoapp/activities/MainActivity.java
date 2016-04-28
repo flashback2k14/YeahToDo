@@ -40,8 +40,6 @@ public class MainActivity extends AppCompatActivity {
         setupListener();
         setupAdapter();
         setupFirebase();
-
-        setTheme(R.style.AppTheme);
     }
 
     private void setupToolbar() {
@@ -132,6 +130,8 @@ public class MainActivity extends AppCompatActivity {
                 Util.buildSnackbar(lvToDos, error.getMessage());
             }
         });
+
+        setTheme(R.style.AppTheme);
     }
 
     @Override
