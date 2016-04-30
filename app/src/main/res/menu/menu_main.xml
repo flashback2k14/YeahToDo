@@ -13,4 +13,10 @@
         android:orderInCategory="110"
         android:title="@string/action_deleted"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_logout"
+        android:orderInCategory="120"
+        android:title="Logout"
+        app:showAsAction="never" />
 </menu>

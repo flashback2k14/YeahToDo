@@ -1,30 +1,99 @@
 package com.yeahdev.todoapp.helper;
 
+import android.support.annotation.Nullable;
+
+import com.firebase.client.AuthData;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
+
 public class FirebaseWrapper {
 
+    public interface OnAuthListener {
+        void onSuccess(AuthData authData);
+        void onFailed(FirebaseError error);
+    }
     public interface OnLoadListener {
         void onAdded(String item);
         void onRemoved(String item);
         void onCanceled(FirebaseError error);
     }
-
     public interface OnChangedListener {
         void onSuccess(String item);
         void onFailed(FirebaseError error);
     }
 
-    public interface OnFullListener {
-        public void onAdded(String item);
-        public void onRemoved(String item);
-        public void onSuccess(String item);
-        public void onFailed(FirebaseError error);
-        public void onCanceled(FirebaseError error);
+    private static HashMap<Firebase, ChildEventListener> listenerMap = new HashMap<>();
+    private static ChildEventListener loadListener;
+
+    /**
+     *
+     * @param baseUrl
+     * @return
+     */
+    @Nullable
+    public static String getUserId(String baseUrl) {
+        AuthData authData = new Firebase(baseUrl).getAuth();
+        if (authData != null) {
+            return authData.getUid();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     *
+     * @param baseUrl
+     * @param email
+     * @param password
+     * @param listener
+     */
+    public static void authWithPassword(String baseUrl, String email, String password, final OnAuthListener listener) {
+        new Firebase(baseUrl).authWithPassword(email, password, new Firebase.AuthResultHandler() {
+            @Override
+            public void onAuthenticated(AuthData authData) {
+                if (listener != null) {
+                    listener.onSuccess(authData);
+                }
+            }
+
+            @Override
+            public void onAuthenticationError(FirebaseError firebaseError) {
+                if (listener != null) {
+                    listener.onFailed(firebaseError);
+                }
+            }
+        });
+    }
+
+    /**
+     *
+     * @param baseUrl
+     * @return
+     */
+    public static boolean logout(String baseUrl) {
+        new Firebase(baseUrl).unauth();
+        return true;
+    }
+
+    /**
+     *
+     */
+    public static void removeListener() {
+        if (FirebaseWrapper.loadListener != null) {
+            for (Map.Entry<Firebase, ChildEventListener> entry : FirebaseWrapper.listenerMap.entrySet()) {
+                Firebase ref = entry.getKey();
+                ChildEventListener listener = entry.getValue();
+                ref.removeEventListener(listener);
+            }
+            FirebaseWrapper.loadListener = null;
+        }
     }
 
     /**
@@ -33,9 +102,9 @@ public class FirebaseWrapper {
      * @param route
      * @param listener
      */
-    public static void loadData(String baseUrl, String route, final OnLoadListener listener) {
-        new Firebase(baseUrl + route)
-            .addChildEventListener(new ChildEventListener() {
+    public static void loadData(String baseUrl, String route, String userId, final OnLoadListener listener) {
+        Firebase firebase = new Firebase(baseUrl + route + "/" + userId);
+        FirebaseWrapper.loadListener =  new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     if (listener != null) {
@@ -64,7 +133,10 @@ public class FirebaseWrapper {
                         listener.onCanceled(firebaseError);
                     }
                 }
-            });
+            };
+
+        FirebaseWrapper.listenerMap.put(firebase, FirebaseWrapper.loadListener);
+        firebase.addChildEventListener(FirebaseWrapper.loadListener);
     }
 
     /**
@@ -74,8 +146,8 @@ public class FirebaseWrapper {
      * @param item
      * @param listener
      */
-    public static void addItem(String baseUrl, final String route, final String item, final OnChangedListener listener) {
-        new Firebase(baseUrl + route)
+    public static void addItem(String baseUrl, final String route, String userId, final String item, final OnChangedListener listener) {
+        new Firebase(baseUrl + route + "/" + userId)
             .push()
             .child("text")
             .setValue(item, new Firebase.CompletionListener() {
@@ -101,8 +173,8 @@ public class FirebaseWrapper {
      * @param item
      * @param listener
      */
-    public static void removeItem(String baseUrl, final String route, final String item, final OnChangedListener listener) {
-        new Firebase(baseUrl + route)
+    public static void removeItem(String baseUrl, final String route, String userId, final String item, final OnChangedListener listener) {
+        new Firebase(baseUrl + route + "/" + userId)
             .orderByChild("text")
             .equalTo(item)
             .addListenerForSingleValueEvent(new ValueEventListener() {

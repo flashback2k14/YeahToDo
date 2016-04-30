@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.firebase.client.FirebaseError;
 
+
 public class Util {
 
     /**
@@ -30,7 +31,7 @@ public class Util {
      * @param deleteRoute
      * @param item
      */
-    public static void buildConfirmDialog(Activity activity, final View view, final String baseUrl, final String route, final String deleteRoute, final String item) {
+    public static void buildConfirmDialog(Activity activity, final View view, final String baseUrl, final String route, final String deleteRoute, final String userId, final String item) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
         alertDialogBuilder.setTitle("Remove Item");
         alertDialogBuilder
@@ -39,7 +40,7 @@ public class Util {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        FirebaseWrapper.addItem(baseUrl, deleteRoute, item, new FirebaseWrapper.OnChangedListener() {
+                        FirebaseWrapper.addItem(baseUrl, deleteRoute, userId, item, new FirebaseWrapper.OnChangedListener() {
                             @Override
                             public void onSuccess(String item) {
                                 Util.buildSnackbar(view, item);
@@ -50,7 +51,7 @@ public class Util {
                             }
                         });
 
-                        FirebaseWrapper.removeItem(baseUrl, route, item, new FirebaseWrapper.OnChangedListener() {
+                        FirebaseWrapper.removeItem(baseUrl, route, userId, item, new FirebaseWrapper.OnChangedListener() {
                             @Override
                             public void onSuccess(String item) {
                                 Util.buildSnackbar(view, item);
@@ -80,7 +81,7 @@ public class Util {
      * @param deleteRoute
      * @param item
      */
-    public static void buildConfirmDialogOnlyRemove(Activity activity, final View view, final String baseUrl, final String deleteRoute, final String item) {
+    public static void buildConfirmDialogOnlyRemove(Activity activity, final View view, final String baseUrl, final String deleteRoute, final String userId, final String item) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
         alertDialogBuilder.setTitle("Remove Item");
         alertDialogBuilder
@@ -89,7 +90,7 @@ public class Util {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        FirebaseWrapper.removeItem(baseUrl, deleteRoute, item, new FirebaseWrapper.OnChangedListener() {
+                        FirebaseWrapper.removeItem(baseUrl, deleteRoute, userId, item, new FirebaseWrapper.OnChangedListener() {
                             @Override
                             public void onSuccess(String item) {
                                 Util.buildSnackbar(view, item);

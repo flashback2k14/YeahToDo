@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -26,6 +27,7 @@ public class ReportActivity extends AppCompatActivity {
 
     private TextView tvLogMessage;
     private String logMessage;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +36,18 @@ public class ReportActivity extends AppCompatActivity {
 
         initToolbar();
         initComponents();
-        registerFab();
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            userId = extras.getString(Constants.USERID);
+            if (userId != null) {
+                registerFab();
+            } else {
+                goBack();
+            }
+        } else {
+            goBack();
+        }
     }
 
     private void initToolbar() {
@@ -66,7 +79,7 @@ public class ReportActivity extends AppCompatActivity {
         setLog("Cron Job started!");
         setLog("Fetching Data from Firebase!");
 
-        final Firebase firebase = new Firebase("https://todoapp-appengine.firebaseio.com/todoitems");
+        final Firebase firebase = new Firebase(Constants.BASEURL + Constants.ROUTE + "/" + userId);
         firebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -124,6 +137,11 @@ public class ReportActivity extends AppCompatActivity {
     private void setLog(String lm) {
         logMessage += lm + "\n";
         tvLogMessage.setText(logMessage);
+    }
+
+    private void goBack() {
+        Toast.makeText(ReportActivity.this, "User not logged in!", Toast.LENGTH_LONG).show();
+        startActivity(new Intent(ReportActivity.this, MainActivity.class));
     }
 
     @Override
