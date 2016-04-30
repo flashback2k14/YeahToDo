@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, final View view, int position, long id) {
                 String item = (String) lvToDos.getItemAtPosition(position);
-                Util.buildConfirmDialog(MainActivity.this, lvToDos, Constants.BASEURL, Constants.ROUTE, userId, Constants.DELETEDROUTE, item);
+                Util.buildConfirmDialog(MainActivity.this, lvToDos, Constants.BASEURL, Constants.ROUTE, Constants.DELETEDROUTE, userId, item);
                 return true;
             }
         });
